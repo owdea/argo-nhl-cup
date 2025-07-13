@@ -13,7 +13,6 @@ const GlobalSettingsForm = () => {
 
     // Funkce pro načtení posledních nastavení z DB
     const fetchLatestSettings = async () => {
-        console.log("Fetchuji data");
         setInitLoading(true);
         const { data, error } = await supabase
             .from('options')
@@ -52,6 +51,29 @@ const GlobalSettingsForm = () => {
 
         setLoading(true);
         try {
+            // Načteme aktuálně aktivní nastavení pro porovnání
+            const { data: current, error: currErr } = await supabase
+                .from('options')
+                .select('match_count, playoff_series_length, option_players(player_name)')
+                .eq('is_active', true)
+                .single();
+            if (currErr) console.error('Chyba při čtení aktuálního nastavení:', currErr);
+
+            // Porovnání: pokud se nic nezměnilo, neprovedeme update
+            if (current) {
+                const currNames = current.option_players.map(p => p.player_name);
+                const isSameSettings =
+                    current.match_count === matchesCount &&
+                    current.playoff_series_length === playoffMatchesCount &&
+                    currNames.length === validNames.length &&
+                    currNames.every((n, i) => n === validNames[i]);
+                if (isSameSettings) {
+                    alert('Nastavení se nezměnilo.');
+                    setLoading(false);
+                    return;
+                }
+            }
+
             // Deaktivace posledního nastavení
             await supabase
                 .from('options')
@@ -65,6 +87,7 @@ const GlobalSettingsForm = () => {
                     players_count: validNames.length,
                     match_count: matchesCount,
                     playoff_series_length: playoffMatchesCount,
+                    is_active: true
                 })
                 .select('id')
                 .single();
