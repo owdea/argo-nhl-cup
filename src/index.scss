@@ -3,16 +3,9 @@
 @tailwind utilities;
 
 /* Vaše SCSS proměnné a pravidla */
-@layer base {
-  $primary: #1d4ed8;
-  body {
-    background: $primary;
-    font-family: sans-serif;
-  }
-}
-
-@layer components {
-  .heading {
-    @apply text-2xl font-bold;
-  }
+$primary: #1d4ed8;
+body {
+  background: $primary;
+  font-family: sans-serif;
+  @apply bg-amber-400;
 }
