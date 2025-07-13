@@ -1,1 +1,10 @@
-@import 'components/options/PlayersNamesInput.css';
+/*
+COMPONENTS
+*/
+
+/*
+    - OPTIONS
+*/
+@import 'components/options/global-settings-form.css';
+@import 'components/options/number-choice.css';
+@import 'components/options/players-names-input.css';

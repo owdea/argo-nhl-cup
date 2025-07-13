@@ -16,10 +16,11 @@ const PlayersNamesInput = ({ value, onChange }) => {
     };
 
     return (
-        <div>
+        <div className="players-names-input">
             {value.map((name, idx) => (
                 <input
                     key={idx}
+                    name={`Soutěžící ${idx + 1}`}
                     type="text"
                     value={name}
                     onChange={handleChange(idx)}
