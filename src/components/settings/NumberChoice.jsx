@@ -7,13 +7,15 @@ const NumberChoice = ({ title, numbers, value, onChange }) => {
             onChange(value);
         }
     };
-
     return (
         <div className="number-choice">
             <span>{title}</span>
             <form>
                 {numbers.map((n) => (
-                    <label key={n}>
+                    <label
+                        key={n}
+                        className={value === n ? 'checked-number-choice' : ''}
+                    >
                         <input
                             type="radio"
                             name={title}

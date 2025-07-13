@@ -1,3 +1,17 @@
 .number-choice {
-
+    form {
+        @apply flex;
+        label {
+            @apply p-2 block cursor-pointer;
+            &:hover {
+                @apply text-red-700;
+            }
+            &.checked-number-choice {
+                @apply bg-neutral-500;
+            }
+            input {
+                @apply hidden;
+            }
+        }
+    }
 }
