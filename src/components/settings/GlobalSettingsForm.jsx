@@ -11,7 +11,9 @@ const GlobalSettingsForm = () => {
     const [loading, setLoading] = useState(false);
     const [initLoading, setInitLoading] = useState(true);
 
+    // Funkce pro načtení posledních nastavení z DB
     const fetchLatestSettings = async () => {
+        console.log("Fetchuji data");
         setInitLoading(true);
         const { data, error } = await supabase
             .from('options')
@@ -25,8 +27,9 @@ const GlobalSettingsForm = () => {
         } else if (data) {
             setMatchesCount(data.match_count);
             setPlayoffMatchesCount(data.playoff_series_length);
+            // Získáme jména hráčů a vždy přidáme jedno prázdné pole navíc
             const playerNames = data.option_players.map(p => p.player_name);
-            const namesWithExtra = playerNames.length ? [...playerNames, ''] : [''];
+            const namesWithExtra = playerNames.length ? [...playerNames, ''] : ['',''];
             setNames(namesWithExtra);
         }
         setInitLoading(false);
@@ -49,12 +52,19 @@ const GlobalSettingsForm = () => {
 
         setLoading(true);
         try {
+            // Deaktivace posledního nastavení
+            await supabase
+                .from('options')
+                .update({ is_active: false })
+                .eq('is_active', true);
+
+            // Vložení nového nastavení jako aktivního
             const { data: option, error: err1 } = await supabase
                 .from('options')
                 .insert({
                     players_count: validNames.length,
                     match_count: matchesCount,
-                    playoff_series_length: playoffMatchesCount
+                    playoff_series_length: playoffMatchesCount,
                 })
                 .select('id')
                 .single();
