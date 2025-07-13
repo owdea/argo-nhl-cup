@@ -8,6 +8,11 @@
   body {
     background: $primary;
     font-family: sans-serif;
-    @apply bg-amber-400;
+  }
+}
+
+@layer components {
+  .heading {
+    @apply text-2xl font-bold;
   }
 }
