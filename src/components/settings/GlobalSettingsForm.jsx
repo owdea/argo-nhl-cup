@@ -1,121 +1,67 @@
-import React, { useState, useEffect } from 'react';
-import PlayersNamesInput from "./PlayersNamesInput.jsx";
-import NumberChoice from "./NumberChoice.jsx";
-import Button from "../button.jsx";
-import { supabase } from '../../lib/supabaseClient'
+import React, { useState, useEffect } from 'react'
+import { fetchCurrentSettings, deactivateSettings, insertSettings } from '../../services/settings'
+import PlayersNamesInput from './PlayersNamesInput.jsx'
+import NumberChoice from './NumberChoice.jsx'
+import Button from '../button.jsx'
 
-const GlobalSettingsForm = () => {
-    const [names, setNames] = useState(['']);
-    const [matchesCount, setMatchesCount] = useState();
-    const [playoffMatchesCount, setPlayoffMatchesCount] = useState();
-    const [loading, setLoading] = useState(false);
-    const [initLoading, setInitLoading] = useState(true);
-
-    // Funkce pro načtení posledních nastavení z DB
-    const fetchLatestSettings = async () => {
-        setInitLoading(true);
-        const { data, error } = await supabase
-            .from('options')
-            .select('match_count, playoff_series_length, option_players(player_name)')
-            .order('updated_at', { ascending: false })
-            .limit(1)
-            .single();
-
-        if (error) {
-            console.error('Chyba při načítání nastavení:', error);
-        } else if (data) {
-            setMatchesCount(data.match_count);
-            setPlayoffMatchesCount(data.playoff_series_length);
-            // Získáme jména hráčů a vždy přidáme jedno prázdné pole navíc
-            const playerNames = data.option_players.map(p => p.player_name);
-            const namesWithExtra = playerNames.length ? [...playerNames, ''] : ['',''];
-            setNames(namesWithExtra);
-        }
-        setInitLoading(false);
-    };
+export default function GlobalSettingsForm() {
+    const [names, setNames] = useState([''])
+    const [matchesCount, setMatchesCount] = useState()
+    const [playoffLength, setPlayoffLength] = useState()
+    const [loading, setLoading] = useState(false)
+    const [initLoading, setInitLoading] = useState(true)
 
     useEffect(() => {
-        fetchLatestSettings();
-    }, []);
+        ;(async () => {
+            const { data, error } = await fetchCurrentSettings()
+            if (!error && data) {
+                setMatchesCount(data.match_count)
+                setPlayoffLength(data.playoff_series_length)
+                const players = data.option_players.map(p => p.player_name)
+                setNames(players.length ? [...players, ''] : ['',''])
+            }
+            setInitLoading(false)
+        })()
+    }, [])
 
     const handleSave = async () => {
-        const validNames = names.filter(n => n.trim() !== '');
-        if (validNames.length < 2) {
-            alert('Vyplňte alespoň 2 hráče');
-            return;
-        }
-        if (!matchesCount || !playoffMatchesCount) {
-            alert('Vyberte všechny potřebné hodnoty.');
-            return;
+        const valid = names.filter(n => n.trim() !== '')
+        if (valid.length < 2 || !matchesCount || !playoffLength) {
+            alert('Doplňte všechno potřebné')
+            return
         }
 
-        setLoading(true);
+        setLoading(true)
         try {
-            // Načteme aktuálně aktivní nastavení pro porovnání
-            const { data: current, error: currErr } = await supabase
-                .from('options')
-                .select('match_count, playoff_series_length, option_players(player_name)')
-                .eq('is_active', true)
-                .single();
-            if (currErr) console.error('Chyba při čtení aktuálního nastavení:', currErr);
+            const { data: current } = await fetchCurrentSettings()
 
-            // Porovnání: pokud se nic nezměnilo, neprovedeme update
-            if (current) {
-                const currNames = current.option_players.map(p => p.player_name);
-                const isSameSettings =
-                    current.match_count === matchesCount &&
-                    current.playoff_series_length === playoffMatchesCount &&
-                    currNames.length === validNames.length &&
-                    currNames.every((n, i) => n === validNames[i]);
-                if (isSameSettings) {
-                    alert('Nastavení se nezměnilo.');
-                    setLoading(false);
-                    return;
-                }
-            }
+            const same =
+                current &&
+                current.match_count === matchesCount &&
+                current.playoff_series_length === playoffLength &&
+                current.option_players.map(p => p.player_name).every((n,i) => n === valid[i]) &&
+                valid.length === current.option_players.length
 
-            // Deaktivace posledního nastavení
-            await supabase
-                .from('options')
-                .update({ is_active: false })
-                .eq('is_active', true);
-
-            // Vložení nového nastavení jako aktivního
-            const { data: option, error: err1 } = await supabase
-                .from('options')
-                .insert({
-                    players_count: validNames.length,
-                    match_count: matchesCount,
-                    playoff_series_length: playoffMatchesCount,
-                    is_active: true
+            if (same) {
+                alert('Nastavení se nezměnilo.')
+            } else {
+                await deactivateSettings()
+                await insertSettings({
+                    players: valid,
+                    matchCount: matchesCount,
+                    playoffLength
                 })
-                .select('id')
-                .single();
-            if (err1) throw err1;
-
-            const playersPayload = validNames.map((name) => ({
-                option_id: option.id,
-                player_name: name.trim(),
-            }));
-
-            const { error: err2 } = await supabase
-                .from('option_players')
-                .insert(playersPayload);
-            if (err2) throw err2;
-
-            alert('Nastavení uloženo!');
-        } catch (error) {
-            console.error(error);
-            alert('Chyba při ukládání: ' + error.message);
+                alert('Nastavení uloženo!')
+            }
+        } catch (e) {
+            console.error(e)
+            alert('Chyba: ' + e.message)
         } finally {
-            setLoading(false);
+            setLoading(false)
         }
-    };
-
-    if (initLoading) {
-        return <div>Načítám aktuální nastavení…</div>;
     }
 
+    if (initLoading) return <div>Načítám aktuální nastavení…</div>
     return (
         <div className="global-settings-form">
             <NumberChoice
@@ -127,20 +73,15 @@ const GlobalSettingsForm = () => {
             <NumberChoice
                 title="Počet nutných vítězství v PlayOff"
                 numbers={[2, 3, 4]}
-                value={playoffMatchesCount}
-                onChange={setPlayoffMatchesCount}
+                value={playoffLength}
+                onChange={setPlayoffLength}
             />
-            <PlayersNamesInput
-                value={names}
-                onChange={setNames}
-            />
+            <PlayersNamesInput value={names} onChange={setNames} />
             <Button
                 text={loading ? 'Ukládám…' : 'Uložit nastavení'}
                 onClick={handleSave}
                 disabled={loading}
             />
         </div>
-    );
+    )
 }
-
-export default GlobalSettingsForm;
