@@ -11,9 +11,7 @@ const GlobalSettingsForm = () => {
     const [loading, setLoading] = useState(false);
     const [initLoading, setInitLoading] = useState(true);
 
-    // Krátká funkce pro načtení posledních nastavení z DB
     const fetchLatestSettings = async () => {
-        console.log("Fetchuji data")
         setInitLoading(true);
         const { data, error } = await supabase
             .from('options')
@@ -28,7 +26,8 @@ const GlobalSettingsForm = () => {
             setMatchesCount(data.match_count);
             setPlayoffMatchesCount(data.playoff_series_length);
             const playerNames = data.option_players.map(p => p.player_name);
-            setNames(playerNames.length ? playerNames : ['']);
+            const namesWithExtra = playerNames.length ? [...playerNames, ''] : [''];
+            setNames(namesWithExtra);
         }
         setInitLoading(false);
     };
@@ -53,7 +52,7 @@ const GlobalSettingsForm = () => {
             const { data: option, error: err1 } = await supabase
                 .from('options')
                 .insert({
-                    players_count: validNames.length,          // počet bez té prázdné položky
+                    players_count: validNames.length,
                     match_count: matchesCount,
                     playoff_series_length: playoffMatchesCount
                 })
@@ -61,7 +60,6 @@ const GlobalSettingsForm = () => {
                 .single();
             if (err1) throw err1;
 
-            // 2) payload jen z těch platných jmen
             const playersPayload = validNames.map((name) => ({
                 option_id: option.id,
                 player_name: name.trim(),
