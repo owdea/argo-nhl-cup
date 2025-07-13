@@ -6,7 +6,7 @@ const GlobalSettingsForm = () => {
     const [names, setNames] = useState(['']);
     console.log(names)
     return (
-        <div>
+        <div className="global-settings-form">
             <PlayersNamesInput
                 value={names}
                 onChange={setNames}

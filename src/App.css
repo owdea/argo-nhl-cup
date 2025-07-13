@@ -1,8 +1,0 @@
-@import "tailwindcss";
-
-body {
-    @apply bg-amber-200;
-    input {
-        @apply bg-red-100 text;
-    }
-}
