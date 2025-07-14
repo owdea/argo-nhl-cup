@@ -6,26 +6,35 @@ const PlayersNamesInput = ({ value, onChange }) => {
         newNames[idx] = e.target.value;
 
         const filled = newNames.filter((n) => n.trim() !== '');
+        onChange(filled.length ? [...filled, ''] : ['']);
+    };
 
-        if (filled.length === 0) {
-            onChange(['']);
-            return;
-        }
-
-        onChange([...filled, '']);
+    const handleRemove = (idx) => () => {
+        const newNames = value.filter((_, i) => i !== idx);
+        const filled = newNames.filter((n) => n.trim() !== '');
+        onChange(filled.length ? [...filled, ''] : ['']);
+        console.log(newNames)
     };
 
     return (
         <div className="players-names-input">
             {value.map((name, idx) => (
-                <input
-                    key={idx}
-                    name={`Soutěžící ${idx + 1}`}
-                    type="text"
-                    value={name}
-                    onChange={handleChange(idx)}
-                    placeholder={`Soutěžící ${idx + 1}`}
-                />
+                <div key={idx} className="player-input-row">
+                    <input
+                        type="text"
+                        value={name}
+                        onChange={handleChange(idx)}
+                        placeholder={`Soutěžící ${idx + 1}`}
+                    />
+                    <button
+                        type="button"
+                        onClick={handleRemove(idx)}
+                        aria-label="Odstranit soutěžícího"
+                        style={{ cursor: 'pointer' }}
+                    >
+                        ×
+                    </button>
+                </div>
             ))}
         </div>
     );
