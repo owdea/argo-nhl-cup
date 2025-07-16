@@ -1,34 +1,26 @@
-const NumberChoice = ({ title, numbers, value, onChange }) => {
+import React from 'react'
 
-    const handleChange = (e) => {
-        const value = Number(e.target.value);
-        onChange(value);
-        if (onChange) {
-            onChange(value);
-        }
-    };
+const NumberChoice = ({ label, options, value, onChange }) => {
+    const handleClick = (n) => {
+        onChange(n)
+    }
+
     return (
-        <div className="number-choice">
-            <span>{title}</span>
-            <form>
-                {numbers.map((n) => (
-                    <label
+        <div>
+            <span>{label}</span>
+            <div>
+                {options.map((n) => (
+                    <button
                         key={n}
-                        className={value === n ? 'checked-number-choice' : ''}
+                        type="button"
+                        onClick={() => handleClick(n)}
                     >
-                        <input
-                            type="radio"
-                            name={title}
-                            value={n}
-                            checked={value === n}
-                            onChange={handleChange}
-                        />
                         {n}
-                    </label>
+                    </button>
                 ))}
-            </form>
+            </div>
         </div>
-    );
-};
+    )
+}
 
-export default NumberChoice;
+export default NumberChoice

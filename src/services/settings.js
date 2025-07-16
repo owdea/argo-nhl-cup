@@ -4,7 +4,7 @@ import { supabase } from '../lib/supabaseClient'
 export async function fetchCurrentSettings() {
     return supabase
         .from('options')
-        .select('id, match_count, playoff_series_length, option_players(player_name)')
+        .select('id, match_count, playoff_series_length')
         .eq('is_active', true)
         .single()
 }
@@ -18,29 +18,17 @@ export async function deactivateSettings() {
 }
 
 // 3) Vložit novou sadu nastavení + hráče
-export async function insertSettings({ players, matchCount, playoffLength }) {
+export async function insertSettings({ matchCount, playoffLength }) {
     // a) nový řádek v options
-    const { data: opt, error: err1 } = await supabase
+    const { data: opt, error } = await supabase
         .from('options')
         .insert({
-            players_count: players.length,
             match_count: matchCount,
             playoff_series_length: playoffLength,
             is_active: true
         })
         .select('id')
         .single()
-    if (err1) throw err1
-
-    // b) payload pro option_players
-    const payload = players.map(name => ({
-        option_id: opt.id,
-        player_name: name.trim()
-    }))
-    const { error: err2 } = await supabase
-        .from('option_players')
-        .insert(payload)
-    if (err2) throw err2
-
+    if (error) throw error
     return opt
 }
