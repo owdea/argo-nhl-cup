@@ -13,7 +13,6 @@ const PlayersNamesInput = ({ value, onChange }) => {
         const newNames = value.filter((_, i) => i !== idx);
         const filled = newNames.filter((n) => n.trim() !== '');
         onChange(filled.length ? [...filled, ''] : ['']);
-        console.log(newNames)
     };
 
     return (
@@ -26,14 +25,18 @@ const PlayersNamesInput = ({ value, onChange }) => {
                         onChange={handleChange(idx)}
                         placeholder={`Soutěžící ${idx + 1}`}
                     />
-                    <button
-                        type="button"
-                        onClick={handleRemove(idx)}
-                        aria-label="Odstranit soutěžícího"
-                        style={{ cursor: 'pointer' }}
-                    >
-                        ×
-                    </button>
+                    {
+                        idx < value.length - 1 && (
+                            <button
+                                type="button"
+                                onClick={handleRemove(idx)}
+                                aria-label="Odstranit soutěžícího"
+                                style={{ cursor: 'pointer' }}
+                            >
+                                ×
+                            </button>
+                        )
+                    }
                 </div>
             ))}
         </div>
