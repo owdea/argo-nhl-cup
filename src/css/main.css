@@ -2,6 +2,6 @@
 COMPONENTS
 */
 
-/*
-    - OPTIONS
-*/
+@import "NonCompetitive/NonCompetitiveDropdown.css";
+@import "NonCompetitive/NonCompetitiveForm.css";
+@import "NonCompetitive/NonCompetitiveNumber.css";
