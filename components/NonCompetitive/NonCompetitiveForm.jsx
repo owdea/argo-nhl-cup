@@ -8,14 +8,8 @@ const NonCompetitiveForm = () => {
     const [homeGoals, setHomeGoals] = useState(0)
     const [awayPlayer, setAwayPlayer] = useState("")
     const [awayGoals, setAwayGoals] = useState(0)
-    console.log(
-        {
-            "awayPlayer": awayPlayer,
-            "awayGoals": awayGoals,
-            "homeGoals": homeGoals,
-            "homePlayer": homePlayer
-        }
-    )
+
+    const [validationTexts, setValidationTexts] = useState([]);
     return (
         <div className={"NonCompetitiveForm"}>
             <div className={"NonCompetitiveFormInput"}>
@@ -37,12 +31,21 @@ const NonCompetitiveForm = () => {
                     onChange={setHomePlayer}
                 />
             </div>
+            {validationTexts.length > 0 && (
+                <ul>
+                    {validationTexts.map((item, i) => (
+                        <li key={i}>{item}</li>
+                    ))}
+                </ul>
+            )}
             <a
                 onClick={() => createNewMatch({
                     awayPlayer,
                     awayGoals,
                     homePlayer,
-                    homeGoals
+                    homeGoals,
+                    validationTexts,
+                    setValidationTexts
                 })}
             >
                 Uložit
