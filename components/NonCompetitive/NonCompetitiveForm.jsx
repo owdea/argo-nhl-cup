@@ -1,13 +1,15 @@
 import NonCompetitiveDropdown from "./NonCompetitiveDropdown.jsx";
 import {useState} from "react";
 import NonCompetitiveNumber from "./NonCompetitiveNumber.jsx";
-import {createNewMatch} from "../../services/players.js";
+import {createNewMatch} from "../../services/nonCompetitiveLeague.js";
+import NonCompetitiveCheckbox from "./NonCompetitiveCheckbox.jsx";
 
 const NonCompetitiveForm = () => {
     const [homePlayer, setHomePlayer] = useState("")
     const [homeGoals, setHomeGoals] = useState(0)
     const [awayPlayer, setAwayPlayer] = useState("")
     const [awayGoals, setAwayGoals] = useState(0)
+    const [hasOvertime, setHasOvertime] = useState(false)
 
     const [validationTexts, setValidationTexts] = useState([]);
     return (
@@ -30,6 +32,11 @@ const NonCompetitiveForm = () => {
                     title={"Domácí"}
                     onChange={setHomePlayer}
                 />
+                <NonCompetitiveCheckbox
+                    title={"Po prodloužení"}
+                    hasOvertime={hasOvertime}
+                    setHasOvertime={setHasOvertime}
+                />
             </div>
             {validationTexts.length > 0 && (
                 <ul>
@@ -44,7 +51,7 @@ const NonCompetitiveForm = () => {
                     awayGoals,
                     homePlayer,
                     homeGoals,
-                    validationTexts,
+                    hasOvertime,
                     setValidationTexts
                 })}
             >

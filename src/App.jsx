@@ -1,11 +1,12 @@
 import './css/main.css'
-import NonCompetitiveDropdown from "../components/NonCompetitive/NonCompetitiveDropdown.jsx";
 import NonCompetitiveForm from "../components/NonCompetitive/NonCompetitiveForm.jsx";
+import NonCompetitiveMatches from "../components/NonCompetitive/NonCompetitiveMatches.jsx";
 
 function App() {
     return (
         <>
             <NonCompetitiveForm/>
+            <NonCompetitiveMatches />
         </>
 
     )
