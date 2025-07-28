@@ -47,7 +47,13 @@ export async function createNewMatch({ awayPlayer, awayGoals, homePlayer, homeGo
 
 
 export async function getMatches () {
-    const data = supabase
-        .from ('non_competitive_matches')
-    console.log(data)
+    const { data, error } = await supabase
+        .from('non_competitive_matches')
+        .select(`
+        *,
+        home_team ( player_name ),
+        away_team ( player_name )
+      `);
+    return data;
 }
+

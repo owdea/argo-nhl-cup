@@ -1,0 +1,30 @@
+.Non-Competitive-Matches {
+    @apply p-4 bg-white max-w-[800px] mx-auto rounded-[16px];
+    h2 {
+        @apply my-0 mb-4;
+    }
+    &__Table {
+        @apply grid grid-cols-8;
+        span {
+            @apply flex justify-center border border-solid border-primary-10 py-3 px-4;
+        }
+        span:first-child {
+            @apply rounded-tl-[8px];
+        }
+        span:last-child {
+            @apply rounded-br-[8px];
+        }
+        span:nth-child(8) {
+            @apply rounded-tr-[8px]
+        }
+        span:nth-last-child(8) {
+            @apply rounded-bl-[8px]
+        }
+    }
+    &__dark-bg {
+        @apply bg-primary-20;
+        &.heading {
+            @apply text-primary-30;
+        }
+    }
+}

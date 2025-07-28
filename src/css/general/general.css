@@ -1,0 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Onest:wght@600&display=swap');
+
+html {
+    @apply font-Onest bg-primary-40;
+}
