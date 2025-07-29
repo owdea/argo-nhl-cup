@@ -10,7 +10,7 @@ export async function createNewMatch({ awayPlayer, awayGoals, homePlayer, homeGo
 
     if (playerError || !players) {
         setValidationTexts(prev => [...prev, "Chyba při získávání hráčů"])
-        return;
+        return
     }
 
     const home = players.find(p => p.player_name === homePlayer);
@@ -18,13 +18,18 @@ export async function createNewMatch({ awayPlayer, awayGoals, homePlayer, homeGo
 
     if (!home || !away) {
         setValidationTexts(prev => [...prev, "Zvolte oba hráče"])
-        return;
+        return
     }
 
     // Krok 2: Validace vstupů
     if (home.id === away.id) {
         setValidationTexts(prev => [...prev, "Hráči se nemohou shodovat"])
-        return;
+        return
+    }
+
+    if (awayGoals === homeGoals) {
+        setValidationTexts(prev => [...prev, "Vstřelené góly nesmí být shodné"])
+        return
     }
 
     // Krok 3: Uložení zápasu
@@ -37,7 +42,7 @@ export async function createNewMatch({ awayPlayer, awayGoals, homePlayer, homeGo
             overtime: hasOvertime,
         }
     ]);
-
+    window.location.reload();
     if (insertError) {
         console.error("Chyba při ukládání zápasu", insertError);
     } else {

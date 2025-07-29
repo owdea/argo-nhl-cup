@@ -56,11 +56,6 @@ const NonCompetitiveForm = () => {
                     homeGoals,
                     hasOvertime,
                     setValidationTexts,
-                    setAwayPlayer,
-                    setAwayGoals,
-                    setHomePlayer,
-                    setHomeGoals,
-                    setHasOvertime,
                 })}
             >
                 Add Match
