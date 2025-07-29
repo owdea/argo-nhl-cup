@@ -3,3 +3,21 @@
 html {
     @apply font-Onest bg-primary-40;
 }
+
+select {
+    @apply rounded-[16px] border-primary-60 border-solid border pl-2;
+}
+
+input[type="number"] {
+    @apply rounded-[16px] border-primary-60 border-solid border pl-2;
+}
+
+input[type="checkbox"] {
+    @apply border-primary-60 border-solid border w-4 h-4;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}

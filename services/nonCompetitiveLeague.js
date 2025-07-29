@@ -17,7 +17,7 @@ export async function createNewMatch({ awayPlayer, awayGoals, homePlayer, homeGo
     const away = players.find(p => p.player_name === awayPlayer);
 
     if (!home || !away) {
-        setValidationTexts(prev => [...prev, "Hráči nebyli nalezeni"])
+        setValidationTexts(prev => [...prev, "Zvolte oba hráče"])
         return;
     }
 

@@ -1,8 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { getTableData } from "../../services/nonCompetitiveLeague.js";
 
 const NonCompetitiveTable = () => {
     const [tableData, setTableData] = useState([]);
+    const [sortKey, setSortKey]   = useState("avg_points_per_match");
+    const [desc, setDesc]         = useState(true);
 
     useEffect(() => {
         getTableData().then((data) => {
@@ -11,7 +13,7 @@ const NonCompetitiveTable = () => {
     }, []);
 
     const headings = [
-        ["Player", ""],
+        ["Player", "Player"],
         ["MP", "Matches Played"],
         ["W", "Wins"],
         ["OW", "Overtime Wins"],
@@ -24,7 +26,7 @@ const NonCompetitiveTable = () => {
         ["ØPTS", "Avg Points per Match"],
     ];
 
-    // Pole property names ve stejném pořadí jako headings
+    // property names in same order as headings
     const fields = [
         "player",
         "matches_played",
@@ -39,25 +41,50 @@ const NonCompetitiveTable = () => {
         "avg_points_per_match",
     ];
 
+    // universal sort handler
+    const handleSort = (key) => {
+        if (key === sortKey) {
+            setDesc(d => !d);
+        } else {
+            setSortKey(key);
+            setDesc(true);
+        }
+    };
+
+    // memoized sorted data
+    const sortedData = useMemo(() => {
+        return [...tableData].sort((a, b) => {
+            const aV = a[sortKey] ?? 0;
+            const bV = b[sortKey] ?? 0;
+            return desc ? bV - aV : aV - bV;
+        });
+    }, [tableData, sortKey, desc]);
+
     return (
         <div className="table-container">
             <h2>Non Competitive League</h2>
             <div className="table Non-Competitive-Table">
                 {/* 1) Heading */}
                 {headings.map(([short, long], hi) => (
-                <span key={`h-${hi}`} className="short-desc">
-                    <span className="long-desc">{long}</span>
-                    {short}
-                </span>
+                    <span
+                        key={`h-${hi}`}
+                        className="short-desc"
+                        style={{ cursor: "pointer" }}
+                        onClick={() => handleSort(fields[hi])}
+                    >
+            <span className="long-desc">{long}</span>
+                        {short}
+                        {sortKey === fields[hi] && (desc ? " ▼" : " ▲")}
+          </span>
                 ))}
 
                 {/* 2) Table data */}
-                {tableData.map((row, ri) =>
+                {sortedData.map((row, ri) =>
                         fields.map((field, ci) => (
-                    <span key={`r${ri}-c${ci}`}>
-                  {row[field]}
-                    </span>
-                    ))
+                            <span key={`r${ri}-c${ci}`}>
+              {row[field]}
+            </span>
+                        ))
                 )}
             </div>
         </div>

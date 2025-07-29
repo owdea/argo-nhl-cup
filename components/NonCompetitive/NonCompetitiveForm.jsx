@@ -14,12 +14,13 @@ const NonCompetitiveForm = () => {
     const [validationTexts, setValidationTexts] = useState([]);
     return (
         <div className={"Non-Competitive-Form"}>
+            <h2>New Match</h2>
             <div className={"Non-Competitive-Form__Inputs"}>
                 <span>Away</span>
                 <span>Goals</span>
                 <span></span>
                 <span>Goals</span>
-                <span>HOME</span>
+                <span>Home</span>
                 <span>Overtime</span>
                 <NonCompetitiveDropdown
                     onChange={setAwayPlayer}
@@ -54,10 +55,15 @@ const NonCompetitiveForm = () => {
                     homePlayer,
                     homeGoals,
                     hasOvertime,
-                    setValidationTexts
+                    setValidationTexts,
+                    setAwayPlayer,
+                    setAwayGoals,
+                    setHomePlayer,
+                    setHomeGoals,
+                    setHasOvertime,
                 })}
             >
-                Save match
+                Add Match
             </a>
         </div>
     )
