@@ -13,27 +13,28 @@ const NonCompetitiveForm = () => {
 
     const [validationTexts, setValidationTexts] = useState([]);
     return (
-        <div className={"NonCompetitiveForm"}>
-            <div className={"NonCompetitiveFormInput"}>
+        <div className={"Non-Competitive-Form"}>
+            <div className={"Non-Competitive-Form__Inputs"}>
+                <span>Away</span>
+                <span>Goals</span>
+                <span></span>
+                <span>Goals</span>
+                <span>HOME</span>
+                <span>Overtime</span>
                 <NonCompetitiveDropdown
-                    title={"Host"}
                     onChange={setAwayPlayer}
                 />
                 <NonCompetitiveNumber
-                    title={"GH"}
                     onChange={setAwayGoals}
                 />
-                vs
+                <span>vs</span>
                 <NonCompetitiveNumber
-                    title={"GD"}
                     onChange={setHomeGoals}
                 />
                 <NonCompetitiveDropdown
-                    title={"Domácí"}
                     onChange={setHomePlayer}
                 />
                 <NonCompetitiveCheckbox
-                    title={"Po prodloužení"}
                     hasOvertime={hasOvertime}
                     setHasOvertime={setHasOvertime}
                 />
@@ -46,6 +47,7 @@ const NonCompetitiveForm = () => {
                 </ul>
             )}
             <a
+                className={"Submit-Button"}
                 onClick={() => createNewMatch({
                     awayPlayer,
                     awayGoals,
@@ -55,7 +57,7 @@ const NonCompetitiveForm = () => {
                     setValidationTexts
                 })}
             >
-                Uložit
+                Save match
             </a>
         </div>
     )

@@ -9,7 +9,6 @@ const NonCompetitiveMatch = ({match, classes}) => {
         "home_goals": match.home_goals,
         "overtime": match.overtime
     }
-    console.log(matchData)
     return (
         <>
             <span className={classes}>{matchData.date}</span>

@@ -6,7 +6,6 @@ const NonCompetitiveCheckbox = ({hasOvertime, setHasOvertime}) => {
                 checked={hasOvertime}
                 onChange={(e) => setHasOvertime(e.target.checked)}
             />
-            Po prodloužení
         </label>
     )
 }

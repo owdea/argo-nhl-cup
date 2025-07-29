@@ -1,5 +1,5 @@
 .Non-Competitive-Matches {
-    @apply p-4 bg-white max-w-[800px] mx-auto rounded-[16px];
+    @apply p-4 bg-white mx-auto max-w-[800px] rounded-[16px] border border-solid border-primary-10 mt-8;
     h2 {
         @apply my-0 mb-4;
     }

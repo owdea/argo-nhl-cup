@@ -4,11 +4,11 @@ General
 
 @import "general/general.css";
 
+
 /*
 COMPONENTS
 */
 
-@import "NonCompetitive/NonCompetitiveDropdown.css";
-@import "NonCompetitive/NonCompetitiveForm.css";
 @import "NonCompetitive/NonCompetitiveMatches.css";
-@import "NonCompetitive/NonCompetitiveNumber.css";
+@import "NonCompetitive/NonCompetitiveTable.css";
+@import "NonCompetitive/NonCompetitiveForm.css";

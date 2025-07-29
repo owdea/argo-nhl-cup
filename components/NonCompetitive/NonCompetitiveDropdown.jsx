@@ -17,7 +17,6 @@ const NonCompetitiveDropdown = (props) => {
 
     return (
         <>
-            <span>{props.title}</span>
             <select onChange={(e) => props.onChange(e.currentTarget.value)}>
                 <option key={"default"}>---</option>
                 {players.map((p, i) => (

@@ -57,3 +57,9 @@ export async function getMatches () {
     return data;
 }
 
+export async function getTableData () {
+    const {data, error} = await supabase
+        .from('non_competitive_leaderboard')
+        .select('*')
+    return data
+}
